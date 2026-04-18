@@ -33,7 +33,16 @@ class BikeCAD():
         self.instance = self.start_bike_cad_Instance()
 
     def start_bike_cad_Instance(self):
-        p = subprocess.Popen('java -jar console_BikeCAD_final.jar'.split(' '), stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        p = subprocess.Popen(
+            [
+                r"C:\Program Files\Eclipse Adoptium\jdk-11.0.30.7-hotspot\bin\java.exe", 
+                '-jar', 
+                'console_BikeCAD_final.jar'
+            ],
+            stdin=subprocess.PIPE, 
+            stdout=subprocess.PIPE,
+            text=False  # Ensure this matches what your code expects (bytes vs str)
+        )
         p.stdout.read(14)
         return p
 
@@ -292,3 +301,13 @@ def get_augmented_views_gpu(images_tensor):
     return res
 
 
+if __name__ == "__main__":
+    # 1. Initialize the CAD engine
+    cad_engine = BikeCAD()
+
+    # 2. Tell the engine to export an SVG of your file
+    # Assumes 'my_bike.bcad' is in a folder named 'my_folder'
+    cad_engine.export_svg_from_list(['./test_gen/1.bcad'])
+
+    # 3. Kill the engine when done
+    cad_engine.kill()

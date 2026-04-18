@@ -190,6 +190,13 @@ def deconvert(df, dataset=""):
                 df.drop(column.replace("R_RGB", "B_RGB"), axis=1, inplace=True)
                 val=r*(2**16)+g*(2**8)+b-(2**24)
                 df[column.replace("R_RGB", "sRGB")]=val
+    
+        if dataset in ["clip_s", "clip"]:
+            # BikeCAD needs "Wheel diameter" (outer) for rendering — compute from BSD + tire width
+            if "BSD front" in df.columns and "Wheel width front" in df.columns:
+                df["Wheel diameter front"] = df["BSD front"] + 2 * df["Wheel width front"]
+            if "BSD rear" in df.columns and "Wheel width rear" in df.columns:
+                df["Wheel diameter rear"] = df["BSD rear"] + 2 * df["Wheel width rear"]
     return df.copy()
     
     
